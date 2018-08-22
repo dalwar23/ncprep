@@ -170,7 +170,7 @@ if __name__ == "__main__":
     if args.delimiter:
         _delimiter = args.delimiter
     else:
-        print('No delimiter provided! Using default [whitespace].....', log_type='info')
+        print('No delimiter provided! Default delimiter [whitespace] will be used.....', log_type='info')
         _delimiter = None
 
     command_center(input_file=args.input_file, column_indexes=args.columns, delimiter=_delimiter,
