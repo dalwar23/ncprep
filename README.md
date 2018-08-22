@@ -22,10 +22,12 @@ ncp.filter_columns(input_file='path/to/input/file', column_indexes='1,2,3',
 
 This will create a file as `output_file` with `1,2,3` columns from `input_file`. 
 
-:exclamation: parameter `delimiter` can be skipped if the `input_file` has \[whitespace\] as delimiter.
-
 :exclamation: parameter `output_file` \[*optional*\], if not provided, the program will create a `output_file` at the
 same directory as `input_file` and the new file will have `_cols.txt` at the end of input file.
+
+:exclamation: Parameter `delimiter` is \[*optional*\] if not provided, the program will consider `whitespace` as default
+delimiter.
+
 
 ## Date and Interval based text clipping
 ```python
@@ -36,11 +38,12 @@ import ncprep as ncp
 ncp.clip_text(input_file='/path/to/data/file', delimiter=',', start_date='2017-07-01', interval=15)
 
 ```
-:fire: Input file format must match => (source target weight timestamp) (timestamp = UNIX timestamp)
 \[*whitespace*\] delimiter is expected, but can have other delimiters also.
 
 This will create a file that contains all the rows from `2017-07-01` till next 15 days. The `output_file` will be
 created at the same directory as input file with `_clipped.txt` at the end.
+
+:fire: Input file format must match => (source target weight timestamp) (timestamp = UNIX timestamp)
 
 :exclamation: Parameter `delimiter` is \[*optional*\] if not provided, the program will consider `whitespace` as default
 delimiter.
@@ -53,8 +56,9 @@ import ncprep as ncp
 ncp.numeric_mapper(input_file='/path/to/data/file', delimiter=',', weighted='yes')
 
 ```
-:fire: Input file format must match => (source target weight) or (source target)
 \[*whitespace*\] delimiter is expected, but can have other delimiters also.
+
+:fire: Input file format must match => (source target weight) or (source target)
 
 :fire: Parameter weighted defines if the file is weighted or not, if weighted, returns natural logarithm of weight as
 third column
@@ -62,7 +66,7 @@ third column
 :exclamation: Parameter `delimiter` is \[*optional*\] if not provided, the program will consider `whitespace` as default
 delimiter.
 
-# Note
+# Notes
 Don't forget to import the following at the beginning of the file
 ```python
 from __future__ import print_function
