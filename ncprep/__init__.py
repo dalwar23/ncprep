@@ -8,9 +8,9 @@ with the another python package named - neochain
 Import this package with: import ncprep
 """
 
-import ncp_txtfilter
-import ncp_txtclipper
-import ncp_txtmapper
+from ncp_txtfilter import filter_columns
+from ncp_txtclipper import clip_text
+from ncp_txtmapper import numeric_mapper
 
 # Source code meta data
 __author__ = 'Dalwar Hossain'
