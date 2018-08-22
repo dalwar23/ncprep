@@ -81,16 +81,37 @@ def filter_columns(input_file=None, column_indexes=None, delimiter=None, output_
     This function filters text input depending on columns and delimiter
     :param input_file: A file path to raw data file
     :param column_indexes: Indexes of the columns that needs to be filtered out (index starts from 1)
-    :param delimiter: Column separator in input/output file (default is ',' [comma])
+    :param delimiter: Column separator in input/output file (default is ' ' [whitespace])
     :param output_file: A file path where the output will be stored
     :return: File object
     """
-    # Check sanity of input
-    sanity_status = _operations.sanity_check(input_file=input_file, column_indexes=column_indexes,
-                                             delimiter=delimiter, output_file=output_file)
+    # Check inputs to avoid Exceptions
+    if input_file and column_indexes:
+        # Check delimiter parameter
+        if delimiter is None:
+            print('No delimiter provided! Using default [whitespace].....', log_type='info')
+            delimiter = ' '  # Using default delimiter
+        else:
+            delimiter = delimiter
+
+        # Check the output file parameter
+        if output_file is None:
+            print('No output file provided! Using same directory as input file.....', log_type='warn', color='orange')
+            file_name, ext = input_file.rsplit('.', 1)
+            output_file = file_name + '_cols.txt'
+        else:
+            output_file = output_file
+
+        # Check sanity of input
+        sanity_status = _operations.sanity_check(input_file=input_file, column_indexes=column_indexes,
+                                                 delimiter=delimiter, output_file=output_file)
+    else:
+        print('Invalid parameters! Check input!!', log_type='error', color='red')
+        sys.exit(1)
 
     # Check if sanity check is Okay
     if sanity_status == 1:
+        # Double checking the delimiter
         if delimiter is None:
             command_delimiter = ' '  # Using default delimiter
         else:
@@ -149,7 +170,7 @@ if __name__ == "__main__":
     if args.delimiter:
         _delimiter = args.delimiter
     else:
-        print('No delimiter provided! Using default (whitespace).....', log_type='info')
+        print('No delimiter provided! Using default [whitespace].....', log_type='info')
         _delimiter = None
 
     command_center(input_file=args.input_file, column_indexes=args.columns, delimiter=_delimiter,
