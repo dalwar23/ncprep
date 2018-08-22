@@ -112,7 +112,7 @@ def load_file(input_dataset, column_separator, headers):
     try:
         data_frame = pd.read_csv(input_dataset, delimiter=delimiter, names=headers, skipinitialspace=True,
                                  converters=convert_dict, comment='#', usecols=columns_to_use)
-        print('Input dataset loaded successfully!', color='green', log_type='info')
+        print('Input dataset loading complete!', color='green', log_type='info')
     except Exception as e:
         print('Can not load input dataset. ERROR: {}'.format(e), color='red', log_type='error')
         sys.exit(1)
@@ -142,7 +142,14 @@ def numeric_mapper(input_file=None, delimiter=None, weighted=None):
     :param weighted: yes/no if the file contains weights of the edges or not
     :return: file object
     """
-    sanity_status = _operations.sanity_check(input_file=input_file)
+    # Check the weighted arguments are provided
+    if input_file and weighted:
+        sanity_status = _operations.sanity_check(input_file=input_file)
+    else:
+        print('Invalid parameters! Check input!!', log_type='error', color='red')
+        sys.exit(1)
+
+    # If sanity check passed start string to numeric mapping
     if sanity_status == 1:
         headers = _operations.generate_headers(weighted)
         output_file_name = _operations.get_output_file(input_file)
@@ -150,12 +157,12 @@ def numeric_mapper(input_file=None, delimiter=None, weighted=None):
         print('Data cleanup complete!', color='green', log_type='info')
         mapping_dict = extract_nodes(data_frame)
         print('Numeric mapping reference creation complete!', color='green', log_type='info')
-        start_time = time.time()
-        print('Numeric mapping started at: {}'.format(datetime.datetime.now().strftime("%H:%M:%S")), log_type='info')
+        start_time = datetime.datetime.now()
+        print('Numeric mapping started at: {}'.format(start_time.strftime("%H:%M:%S")), log_type='info')
         numeric_data_frame = numeric_mapping(data_frame, mapping_dict)
-        mapping_end_time = time.time() - start_time
+        mapping_end_time = datetime.datetime.now() - start_time
         print('Elapsed time for mapping: ', log_type='info', end='')
-        print('{}'.format(time.strftime("%H:%M:%S", time.gmtime(mapping_end_time))), color='cyan', text_format='bold')
+        print('{}'.format(mapping_end_time), color='cyan', text_format='bold')
         print('Numeric mapping complete!', color='green', log_type='info')
 
         _operations.create_output_file(numeric_data_frame, output_file_name)
@@ -203,7 +210,7 @@ if __name__ == '__main__':
     if args.delimiter:
         _delimiter = args.delimiter
     else:
-        print('No delimiter provided! Using default (whitespace).....', log_type='info')
+        print('No delimiter provided! Default delimiter [whitespace] will be used.....', log_type='info')
         _delimiter = None
 
     command_center(input_file=args.input_file, delimiter=_delimiter, weighted=args.weighted)
