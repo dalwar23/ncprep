@@ -50,9 +50,9 @@ def clip_data_frame(data_frame=None, start_date=None, periods=None):
     end_date = date_range[-1]
 
     # Clip the data in between start date and end date
-    print('Clipping desired data from data frame.....', log_type='info')
+    print('Clipping desired data.....', log_type='info')
     data_frame = data_frame.loc[start_date:end_date]
-    print('Desired data clipped successfully!', log_type='info', color='green')
+    print('Desired data clipping complete!', log_type='info', color='green')
 
     # Return
     return data_frame
@@ -79,7 +79,7 @@ def load_file(input_file=None, delimiter=None):
     try:
         data_frame = pd.read_csv(input_file, delimiter=delimiter, names=headers, skipinitialspace=True,
                                  comment='#')
-        print('Input dataset loaded successfully!', color='green', log_type='info')
+        print('Input dataset loading complete!', color='green', log_type='info')
     except Exception as e:
         print('Can not load input dataset. ERROR: {}'.format(e), color='red', log_type='error')
         sys.exit(1)
@@ -98,8 +98,21 @@ def clip_text(input_file=None, delimiter=None, start_date=None, interval=None):
     :param interval: for how many days (int)
     :return: clipped text, rest of the text
     """
-    # Check sanity of the input file
-    sanity_status = _operations.sanity_check(input_file=input_file, delimiter=delimiter)
+    # Check inputs to avoid exceptions
+    if input_file and start_date and interval:
+        # Check delimiter
+        if delimiter is None:
+            print('No delimiter provided! Using default [whitespace].....', log_type='info')
+            delimiter = None  # No delimiter provided
+        else:
+            delimiter = delimiter
+
+        # Check sanity of the input file
+        sanity_status = _operations.sanity_check(input_file=input_file, delimiter=delimiter)
+
+    else:
+        print('Invalid parameters! Check input!!', log_type='error', color='red')
+        sys.exit(1)
 
     # If sanity check is passed, read and clip the text
     if sanity_status == 1:
@@ -163,7 +176,7 @@ if __name__ == '__main__':
     if args.delimiter:
         _delimiter = args.delimiter
     else:
-        print('No delimiter provided! Using default (whitespace).....', log_type='info')
+        print('No delimiter provided! Default delimiter [whitespace] will be used.....', log_type='info')
         _delimiter = None
     if args.start_date:
         _start_date = args.start_date
