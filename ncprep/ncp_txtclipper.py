@@ -111,7 +111,7 @@ def clip_text(input_file=None, delimiter=None, start_date=None, interval=None):
 
         # Create output file of the clipped data
         file_name, ext = input_file.rsplit('.', 1)
-        output_file = file_name + '_clipped' + ext
+        output_file = file_name + '_clipped.' + ext
         _operations.create_output_file(data_frame=clipped_text, output_file_name=output_file)
     else:
         print('Sanity check failed!', log_type='error', color='red')
