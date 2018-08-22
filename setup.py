@@ -64,7 +64,7 @@ if __name__ == "__main__":
             'Programming Language :: Python :: 3.6',
             'Programming Language :: Python :: 3.7',
             'Topic :: Software Development :: Libraries :: Python Modules'],
-        packages='ncprep',
+        packages=['ncprep'],
         include_package_data=True,
         install_requires=['pip>=18.0',
                           'argparse>=1.2.1',
