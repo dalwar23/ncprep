@@ -52,7 +52,7 @@ def create_command(input_file, columns_to_use, column_separator, output_file):
         delimiter = ' -F "' + column_separator + '"'
     command = "awk" + delimiter + " '{print " + command_segment + "}' " + input_file + " > " + output_file
 
-    print('Command creation complete!', log_type='info')
+    print('Command creation complete!', log_type='info', color='green')
 
     # Return command
     return command
@@ -69,7 +69,7 @@ def create_output_file(command):
     try:
         print('Creating output file.....', log_type='info')
         subprocess.check_output(command, shell=True, universal_newlines=True).strip()
-        print('Output file creation complete!', log_type='info')
+        print('Output file creation complete!', log_type='info', color='green')
     except Exception as e:
         print('Output file creation error. ERROR: {}'.format(e), color='red', log_type='error')
         sys.exit(1)
@@ -90,7 +90,7 @@ def filter_columns(input_file=None, column_indexes=None, delimiter=None, output_
         # Check delimiter parameter
         if delimiter is None:
             print('No delimiter provided! Using default [whitespace].....', log_type='info')
-            delimiter = ' '  # Using default delimiter
+            delimiter = None
         else:
             delimiter = delimiter
 
