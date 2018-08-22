@@ -16,8 +16,8 @@ intervals and also maps string column values to numeric column values.
 import ncprep as ncp
 
 # Filter columns from a text file
-ncp.filter_columns(input_file='path/to/input/file', column_indexes='1,2,3', delimiter=','
-, output_file='path/to/output/file')
+ncp.filter_columns(input_file='path/to/input/file', column_indexes='1,2,3',
+                   delimiter=',' , output_file='path/to/output/file')
 ```
 
 This will create a file as `output_file` with `1,2,3` columns from `input_file`. 
