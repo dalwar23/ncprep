@@ -56,6 +56,9 @@ import ncprep as ncp
 ncp.numeric_mapper(input_file='/path/to/data/file', delimiter=',', weighted='yes')
 
 ```
+This will create a string to numeric mapping for all the source, target values and create an `output_file` at the same
+directory as `input_file` with `_numeric.txt` at the end of the file name.
+
 \[*whitespace*\] delimiter is expected, but can have other delimiters also.
 
 :fire: Input file format must match => (source target weight) or (source target)
