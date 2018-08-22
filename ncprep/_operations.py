@@ -66,7 +66,7 @@ def generate_headers(weighted=None):
     elif weighted == "no" or weighted == "No" or weighted == "N" or weighted == "n":
         headers = ['source', 'target']
     else:
-        print('Please provide weighted (-w) argument with yes/no, y/n, Yes/No', log_type='error')
+        print('Please provide weighted argument with yes/no, y/n, Yes/No', log_type='error')
         sys.exit(1)
 
     # Return
@@ -287,8 +287,8 @@ def generate_sanity_status(input_file_status=None, column_indexes_status=None, h
             print('OK', color='green')
             status_code = status_code and 1
         elif delimiter_status == 2:
-            print('[!] OK', color='orange')
-            print('Program might not detect nodes if input file does not have default (comma) delimiter',
+            print('OK [!]', color='orange')
+            print('Program might not work as expected if the file does not have default [whitespace] delimiter',
                   log_type='warn', color='orange')
             status_code = status_code and 1
 
@@ -334,7 +334,15 @@ def sanity_check(input_file=None, column_indexes=None, delimiter=None, output_fi
         column_indexes_status = 0
         header_status = check_file_header(headers)
 
+    # If both input file and delimiter is provided
     if input_file and delimiter:
+        # Check delimiter
+        delimiter, delimiter_status = check_delimiter_status(detected_delimiter, delimiter)
+    else:
+        delimiter_status = 0
+
+    # If input file is provided and delimiter
+    if input_file and delimiter is None:
         # Check delimiter
         delimiter, delimiter_status = check_delimiter_status(detected_delimiter, delimiter)
     else:
