@@ -8,14 +8,11 @@ import sys
 import pandas as pd
 import math
 import datetime
-try:
-    from pyrainbowterm import *
-except ImportError:
-    print('Can not import pyrainbowterm!', log_type='error')
-    print('Try: pip install pyrainbowterm', log_type='hint')
-    sys.exit(1)
+from pyrainbowterm import *
+
 # Import file_operations
 import _operations
+
 
 # Source code meta data
 __author__ = 'Dalwar Hossain'
@@ -91,12 +88,12 @@ def __load_file(input_dataset, column_separator, headers):
     :return: Python pandas data frame
     """
     # Check headers
-    if len(headers) == 3:
+    if len(headers) == 4:
         convert_dict = {'weight': __clean_convert_weight}
-        columns_to_use = [0, 1, 2]
+        columns_to_use = [0, 1, 2, 3]
     else:
         convert_dict = {}
-        columns_to_use = [0, 1]
+        columns_to_use = [0, 1, 3]
 
     # Check delimiter
     if column_separator is None:
@@ -109,7 +106,7 @@ def __load_file(input_dataset, column_separator, headers):
     try:
         data_frame = pd.read_csv(input_dataset, delimiter=delimiter, names=headers, skipinitialspace=True,
                                  converters=convert_dict, comment='#', usecols=columns_to_use)
-        print('Input dataset loading complete!', color='green', log_type='info')
+        print('Input dataset loading complete!', log_type='info')
     except Exception as e:
         print('Can not load input dataset. ERROR: {}'.format(e), color='red', log_type='error')
         sys.exit(1)
@@ -149,18 +146,22 @@ def numeric_mapper(input_file=None, delimiter=None, weighted=None):
     # If sanity check passed start string to numeric mapping
     if sanity_status == 1:
         headers = _operations.generate_headers(weighted)
-        output_file_name = _operations.get_output_file(input_file)
+        output_file_name = _operations.get_output_file(input_file=input_file, suffix='_numeric', ext='.txt')
         data_frame = __load_file(input_file, delimiter, headers)
-        print('Data cleanup complete!', color='green', log_type='info')
+        print('Data cleanup complete!', log_type='info')
         mapping_dict = __extract_nodes(data_frame)
-        print('Numeric mapping reference creation complete!', color='green', log_type='info')
+        print('Numeric mapping reference creation complete!', log_type='info')
+
+        mapping_file_name = _operations.get_output_file(input_file=input_file, suffix='_map', ext='.pkl')
+        _operations.create_mapping_file(output_file_name=mapping_file_name, data=mapping_dict)
+
         start_time = datetime.datetime.now()
         print('Numeric mapping started at: {}'.format(start_time.strftime("%H:%M:%S")), log_type='info')
         numeric_data_frame = __numeric_mapping(data_frame, mapping_dict)
         mapping_end_time = datetime.datetime.now() - start_time
         print('Elapsed time for mapping: ', log_type='info', end='')
         print('{}'.format(mapping_end_time), color='cyan', text_format='bold')
-        print('Numeric mapping complete!', color='green', log_type='info')
+        print('Numeric mapping complete!', log_type='info')
 
         _operations.create_output_file(numeric_data_frame, output_file_name)
     else:
