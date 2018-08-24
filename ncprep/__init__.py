@@ -25,4 +25,4 @@ from ncp_txtmapper import numeric_mapper
 
 
 # Version
-__version__ = 1.0
+__version__ = 1.1
