@@ -8,12 +8,8 @@ import os
 import sys
 import datetime
 from itertools import islice
-try:
-    from pyrainbowterm import *
-except ImportError:
-    print('Can not import pyrainbowterm!', log_type='error')
-    print('Try: pip install pyrainbowterm', log_type='hint')
-    sys.exit(1)
+from pyrainbowterm import *
+
 
 # Source code meta data
 __author__ = 'Dalwar Hossain'
