@@ -38,7 +38,7 @@ def readme():
 if __name__ == "__main__":
     setup(
         name='ncprep',
-        version='1.0',
+        version='1.1',
         maintainer='Dalwar Hossain',
         maintainer_email='dalwar.hossain@protonmail.com',
         author='Dalwar Hossain',
