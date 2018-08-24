@@ -47,7 +47,7 @@ def __clip_data_frame(data_frame=None, start_date=None, periods=None):
     # Clip the data in between start date and end date
     print('Clipping desired data.....', log_type='info')
     data_frame = data_frame.loc[start_date:end_date]
-    print('Desired data clipping complete!', log_type='info', color='green')
+    print('Desired data clipping complete!', log_type='info')
 
     # Return
     return data_frame
@@ -74,7 +74,7 @@ def __load_file(input_file=None, delimiter=None):
     try:
         data_frame = pd.read_csv(input_file, delimiter=delimiter, names=headers, skipinitialspace=True,
                                  comment='#')
-        print('Input dataset loading complete!', color='green', log_type='info')
+        print('Input dataset loading complete!', log_type='info')
     except Exception as e:
         print('Can not load input dataset. ERROR: {}'.format(e), color='red', log_type='error')
         sys.exit(1)
