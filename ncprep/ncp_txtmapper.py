@@ -5,11 +5,8 @@ from __future__ import print_function
 
 # Import python libraries
 import sys
-import os
-import argparse
 import pandas as pd
 import math
-import time
 import datetime
 try:
     from pyrainbowterm import *
@@ -26,7 +23,7 @@ __email__ = 'dalwar.hossain@protonmail.com'
 
 
 # Numeric mapping of the entire data
-def numeric_mapping(data_frame, mapping_dict):
+def __numeric_mapping(data_frame, mapping_dict):
     """
     This function maps every string values into a numeric values in pandas data frame
     :param data_frame: Python pandas data frame
@@ -43,7 +40,7 @@ def numeric_mapping(data_frame, mapping_dict):
 
 
 # Extract unique nodes/values for mapping
-def extract_nodes(data_frame):
+def __extract_nodes(data_frame):
     """
     This function extracts unique values from a python pandas data frame given that first two columns have headers
     'source' and 'target'
@@ -71,7 +68,7 @@ def extract_nodes(data_frame):
 
 
 # Clean and convert weights into normalized form (rounded up to 6 decimal point)
-def clean_convert_weight(x):
+def __clean_convert_weight(x):
     """
     This function strips any white space and new lines. It also converts the value to a numpy 64 bit integer.
     Also normalizes big and small values using natural logarithm and rounding them up to 6 decimal points.
@@ -85,7 +82,7 @@ def clean_convert_weight(x):
 
 
 # Load input file in to pandas data frame
-def load_file(input_dataset, column_separator, headers):
+def __load_file(input_dataset, column_separator, headers):
     """
     This function reads a text file and loads it into python pandas data frame
     :param input_dataset: A file path that contains row x column wise text data
@@ -95,7 +92,7 @@ def load_file(input_dataset, column_separator, headers):
     """
     # Check headers
     if len(headers) == 3:
-        convert_dict = {'weight': clean_convert_weight}
+        convert_dict = {'weight': __clean_convert_weight}
         columns_to_use = [0, 1, 2]
     else:
         convert_dict = {}
@@ -153,13 +150,13 @@ def numeric_mapper(input_file=None, delimiter=None, weighted=None):
     if sanity_status == 1:
         headers = _operations.generate_headers(weighted)
         output_file_name = _operations.get_output_file(input_file)
-        data_frame = load_file(input_file, delimiter, headers)
+        data_frame = __load_file(input_file, delimiter, headers)
         print('Data cleanup complete!', color='green', log_type='info')
-        mapping_dict = extract_nodes(data_frame)
+        mapping_dict = __extract_nodes(data_frame)
         print('Numeric mapping reference creation complete!', color='green', log_type='info')
         start_time = datetime.datetime.now()
         print('Numeric mapping started at: {}'.format(start_time.strftime("%H:%M:%S")), log_type='info')
-        numeric_data_frame = numeric_mapping(data_frame, mapping_dict)
+        numeric_data_frame = __numeric_mapping(data_frame, mapping_dict)
         mapping_end_time = datetime.datetime.now() - start_time
         print('Elapsed time for mapping: ', log_type='info', end='')
         print('{}'.format(mapping_end_time), color='cyan', text_format='bold')
@@ -169,48 +166,3 @@ def numeric_mapper(input_file=None, delimiter=None, weighted=None):
     else:
         print('Sanity check failed!', log_type='error', color='red')
         sys.exit(1)
-
-
-# Command Center
-def command_center(input_file=None, delimiter=None, weighted=None):
-    """
-    This function controls rest of the functions
-    :param input_file: Input file path
-    :param delimiter: Optional separator for he column of the input file
-    :param weighted: Simple yes/no if the input file is weighted or not
-    :rtype: <>
-    """
-    print('Initializing.....', color='green', log_type='info')
-    numeric_mapper(input_file, delimiter, weighted)
-
-
-# Standard boilerplate for running this source code file as a standalone segment
-if __name__ == '__main__':
-    """
-    Parse arguments and follow through to mission control
-    """
-    # Print initial message
-    _operations.initial_message(os.path.basename(__file__))
-
-    # Create parser
-    parser = argparse.ArgumentParser(add_help=True)
-
-    parser.add_argument('-i', '--input-file', action='store', dest='input_file', required=True,
-                        help='Input file absolute path. E.g. /home/user/data/input/file_name.txt/.csv/.dat etc.')
-    parser.add_argument('-d', '--delimiter', action='store', dest='delimiter', required=False,
-                        help='Separator for the input and output file. E.g. (,)/(";" need to be quoted)/tab/space. '
-                             'Default is whitespace')
-    parser.add_argument('-w', '--weighted', action='store', dest='weighted', required=True,
-                        help='Boolean - yes/no if the file has weight column')
-
-    # Parse arguments
-    args = parser.parse_args()
-
-    # Double checking the arguments
-    if args.delimiter:
-        _delimiter = args.delimiter
-    else:
-        print('No delimiter provided! Default delimiter [whitespace] will be used.....', log_type='info')
-        _delimiter = None
-
-    command_center(input_file=args.input_file, delimiter=_delimiter, weighted=args.weighted)
