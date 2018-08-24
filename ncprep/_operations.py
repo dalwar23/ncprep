@@ -10,6 +10,12 @@ import datetime
 from itertools import islice
 from pyrainbowterm import *
 
+# Import pickle [Python 2 uses cPickle]
+if sys.version_info[0] == 2:
+    import cPickle as pickle
+else:
+    import pickle
+
 
 # Source code meta data
 __author__ = 'Dalwar Hossain'
@@ -17,22 +23,23 @@ __email__ = 'dalwar.hossain@protonmail.com'
 
 
 # Get directory path for input/output data
-def get_output_file(input_file):
+def get_output_file(input_file=None, suffix=None, ext=None):
     """
     This function extracts the directory path of input file and creates a new file name for the output file
     :param input_file: A complete file path for input dataset
+    :param suffix: Suffix for the output file
+    :param ext: File extension
     :return: A full path for output file
     """
     # Create output file name from input file in the same directory
-    ext = '.txt'
-    output_file_name = input_file.rsplit('.', 1)[0] + '_numeric' + ext
+    output_file_name = input_file.rsplit('.', 1)[0] + suffix + ext
 
     # Return output path
     return output_file_name
 
 
 # Create output file
-def create_output_file(data_frame, output_file_name):
+def create_output_file(data_frame=None, output_file_name=None):
     """
     This function creates a file from python pandas data frame
     :param data_frame: Python pandas data frame
@@ -43,10 +50,25 @@ def create_output_file(data_frame, output_file_name):
     print('Creating output file.....', log_type='info')
     try:
         data_frame.to_csv(output_file_name, index=False, header=False, sep=' ')
-        print('Output file creation complete!', color='green', log_type='info')
+        print('Output file creation complete!', log_type='info')
     except Exception as e:
         print('Can not write output file. ERROR: {}'.format(e), log_type='error')
         sys.exit(1)
+
+
+# Create mapping file
+def create_mapping_file(output_file_name=None, data=None):
+    """
+    This function created a .pkl file with the string->number mapping
+    :param output_file_name: Data storage file name
+    :param data: The data to be piclked
+    :return: file object
+    """
+    print('Storing string to numeric map in a .pkl file.....', log_type='info')
+    pkl_file = open(output_file_name, 'wb')
+    pickle.dump(data, pkl_file, protocol=pickle.HIGHEST_PROTOCOL)
+    pkl_file.close()
+    print('Mapping file creation complete!', log_type='info')
 
 
 # Create headers based on weighted or unweighted
@@ -58,9 +80,9 @@ def generate_headers(weighted=None):
     """
     # Assign headers based on weighted or not
     if weighted == "yes" or weighted == "Yes" or weighted == "Y" or weighted == "y":
-        headers = ['source', 'target', 'weight']
+        headers = ['source', 'target', 'weight', 'timestamp']
     elif weighted == "no" or weighted == "No" or weighted == "N" or weighted == "n":
-        headers = ['source', 'target']
+        headers = ['source', 'target', 'timestamp']
     else:
         print('Please provide weighted argument with yes/no, y/n, Yes/No', log_type='error')
         sys.exit(1)
@@ -169,8 +191,8 @@ def check_column_indexes(column_indexes):
     try:
         columns_to_use = column_indexes.split(',')
     except Exception as e:
-        print('-c/--columns argument does not match input criteria! ERROR: {}'.format(e), log_type='error')
-        print('Try: -c 1,4,6,3 or --columns 1,4,6,3 [Index starts from 1, separated by comma (,)]', log_type='hint')
+        print('Column indexes argument does not match input criteria! ERROR: {}'.format(e), log_type='error')
+        print('Try: "1,4,6,3" [Index starts from 1, separated by comma (,)]', log_type='hint')
     # Check if columns are in the list or not
     if columns_to_use:
         column_index_status = 1
@@ -194,7 +216,10 @@ def check_delimiter_status(detected_delimiter=None, provided_delimiter=None):
     print('Provided delimiter: "{}"'.format(provided_delimiter), log_type='info')
     print('Detected delimiter: "{}"'.format(detected_delimiter), log_type='info')
 
-    if detected_delimiter != provided_delimiter:
+    if detected_delimiter is ' ' and provided_delimiter is None:
+        print('Delimiter converted to whitespace!', log_type='hint')
+        delimiter_status = 1
+    elif detected_delimiter != provided_delimiter:
         delimiter_status = 2
         print('Delimiter mismatch!', log_type='warn', color='orange')
     elif detected_delimiter == provided_delimiter:
