@@ -43,7 +43,7 @@ if __name__ == "__main__":
         maintainer_email='dalwar.hossain@protonmail.com',
         author='Dalwar Hossain',
         author_email='dalwar.hossain@protonmail.com',
-        description='ncprep - A text preparation package for blockchain data',
+        description='ncprep - A data preparation package for blockchain transaction data',
         keywords=['Network', 'Blockchain', 'Filtering', 'Clipping'],
         long_description=readme(),
         license='MIT',
