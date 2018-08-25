@@ -1,0 +1,18 @@
+language: python
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+# Install dependencies
+install:
+  - python setup.py install
+
+# Script to run
+script:
+  - echo "passed"
+
+# Github Branch
+branches:
+  only:
+    - master
