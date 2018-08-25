@@ -72,7 +72,7 @@ if __name__ == "__main__":
                           'pyrainbowterm>=1.0',
                           'subprocess32>=3.5.2',
                           'setuptools>=40.1.0',
-                          'six>=1.11.0',
+                          'six>=1.10.0',
                           'wheel>=0.31.1',
                           'python-dateutil>=2.7.3',
                           'pytz>=2018.5',
